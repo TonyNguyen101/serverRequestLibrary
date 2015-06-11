@@ -1,0 +1,41 @@
+<% include ../partials/header %>
+
+<h1>These are the Characters of Archer</h1>
+<a href="/archers/new">Add New Character</a>
+
+<div>	
+	<thead>
+		<tr>
+			<td>Name</td>
+			<td>CodeName</td>
+			<td>Image</td>
+			<td>Alive Y/N</td>
+			<td>Misc. (in array)</td>
+		</tr>
+	</thead>
+</div>
+
+<% archers.forEach(function(archer){ %>
+<div>	
+	<tbody>
+		<tr>
+			<td><%= archer.name %></td>
+			<td><%= archer.codeName %></td>
+			<td><img src="<%= archer.picture %>" alt="Picture goes here"></td> 
+			<td><%= archer.aliveYN %></td>
+			<td><%= archer.mixedBag %></td>
+			<td><a href="/archers/<%= archer.id %>/show">Check him/her out</a></td>
+			<td><a href="/archers/<%= archer.id %>/edit">Edit</a></td>
+			<td>
+				<form action="/archers/<%= archer.id %>?_method=DELETE" method="POST">
+					<input type="submit" value="Delete">
+				</form>
+			</td>
+
+		</tr>
+	</tbody>
+</div>	
+<% }) %>
+
+
+<% include ../partials/footer %>

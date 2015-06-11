@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var archerSchema = new mongoose.Schema({
 	name: String,
 	codeName: {type: String, required: 1},
-	Picture: String,
+	picture: String,
 	aliveYN: Boolean,
 	mixedBag: [String]  
 });
