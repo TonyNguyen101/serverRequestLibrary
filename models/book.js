@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 
 var bookSchema = new mongoose.Schema({
 	title: {type: String, required: true},
-	author: String,
-	ISBN: Number,
+	authors: String,
+	publishedDate: Number,
 	avergeRating: Number,
-	price: Number
+	indentifier: Number
 });
 
 var Book = mongoose.model("Book", bookSchema);

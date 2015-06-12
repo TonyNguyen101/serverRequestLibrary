@@ -4,7 +4,9 @@ app = express();
 var bodyParser = require("body-parser");
 var methodOverride = require('method-override');
 var morgan  = require('morgan');
+var request = require('request');
 var db = require('./models');
+var books;
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -15,10 +17,23 @@ app.use(morgan('tiny'));
 app.get('/', function (req, res){
 	res.render('books/search');
 });
-app.post('/search', function (req, res){
+app.get('/search', function (req, res){
 	var searchTerm = req.body.searchTerm;
-	console.log(searchTerm);
-	
+	request.get('https://www.googleapis.com/books/v1/volumes?q=' + searchTerm + '+inTitle&key=AIzaSyBaR9JInYb8nlng5rBJ6T2TicvHEXNqHKc', function(err, res, body){
+		if (err) {
+	    console.log("Error! Request failed - " + err);
+	  } else if (!err && res.statusCode === 200) {
+	  	var googleBookData = JSON.parse(body); 
+	    /*console.log(googleBookData.items[1].volumeInfo);*/
+			books = googleBookData.items;
+	  }		
+	});
+	res.render('books/searchResults', {books: books});
+});
+
+app.get('/searchResults', function (req, res){
+	console.log(books);
+	res.render('books/searchResults', {books: books});
 });
 
 app.get('/books', function (req, res){
@@ -33,7 +48,7 @@ app.get('/books/new', function (req, res){
 //CREATE
 app.post('/books', function (req, res){
 	db.Book.create(req.body.books, function (err, book){
-		res.redirect('books');
+		res.redirect('/books');
 	});
 });
 //SHOW

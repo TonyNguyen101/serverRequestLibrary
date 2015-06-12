@@ -1,0 +1,39 @@
+<% include ../partials/header %>
+
+<h1>Check out deez Books!</h1>
+
+<% for (var i = 0; i < 10; i++){ %>
+<table class="table table-striped">	
+	<thead>
+		<tr>
+			<td>Name</td>
+			<td>Author</td>
+			<td>Year</td>
+			<td>Average Rating</td>
+			<td>ISBN</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><%= books[i].volumeInfo.title %></td>
+			<td><%= books[i].volumeInfo.authors[0] %></td>
+			<td><%= books[i].volumeInfo.publishedDate %></td>
+			<td><%= books[i].volumeInfo.averageRating %></td>
+			<td><%= books[i].volumeInfo.industryIdentifiers[0].identifier %></td>
+			<td>
+				<form action="/books/<%= book.id %>" method="POST">
+					<input type="text" name='book[title]' value="<% books[i].volumeInfo.title %>">
+					<input type="text" name="book[title]" value="<% books[i].volumeInfo.author[0] %>">
+					<input type="text" name="book[publishedDate]" value="<% books[i].volumeInfo.publishedDate %>">
+					<input type="text" name="book[averageRating]" value="<% books[i].volumeInfo.averageRating %>">
+					<input type="text" name="book[identifier]" value="<% books[i].volumeInfo.industryIdentifiers[0].identifier %>">
+					<input type="submit" value="Buy">
+				</form>
+			</td>	
+		</tr>
+	</tbody>
+</table>
+<% }; %>
+
+
+<% include ../partials/footer %>
