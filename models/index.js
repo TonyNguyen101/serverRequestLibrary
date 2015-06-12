@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost/archer_app");
+mongoose.connect("mongodb://localhost/book_app");
 mongoose.set("debug", true);
 
-module.exports.Archer = require("./archer");
+module.exports.Book = require("./book");

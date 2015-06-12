@@ -4,7 +4,9 @@ app = express();
 var bodyParser = require("body-parser");
 var methodOverride = require('method-override');
 var morgan  = require('morgan');
+var request = require('request');
 var db = require('./models');
+var books;
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -13,50 +15,69 @@ app.use(morgan('tiny'));
 
 //INDEX
 app.get('/', function (req, res){
-	res.redirect('/archers');
+	res.render('books/search');
 });
-app.get('/archers', function (req, res){
-	db.Archer.find({}, function(err, archers){
-		res.render('archers/index', {archers:archers});	
+app.get('/search', function (req, res){
+	var searchTerm = req.body.searchTerm;
+	request.get('https://www.googleapis.com/books/v1/volumes?q=' + searchTerm + '+inTitle&key=AIzaSyBaR9JInYb8nlng5rBJ6T2TicvHEXNqHKc', function(err, res, body){
+		if (err) {
+	    console.log("Error! Request failed - " + err);
+	  } else if (!err && res.statusCode === 200) {
+	  	var googleBookData = JSON.parse(body); 
+	    /*console.log(googleBookData.items[1].volumeInfo);*/
+			books = googleBookData.items;
+	  }		
+	});
+	res.render('books/searchResults', {books: books});
+});
+
+app.get('/searchResults', function (req, res){
+	console.log(books);
+	res.render('books/searchResults', {books: books});
+});
+
+app.get('/books', function (req, res){
+	db.Book.find({}, function(err, books){
+		res.render('books/index', {books:books});	
 	});
 });
 //NEW
-app.get('/archers/new', function (req, res){
-	res.render("archers/new");
+app.get('/books/new', function (req, res){
+	res.render("books/new");
 });
 //CREATE
-app.post('/archers', function (req, res){
-	db.Archer.create(req.body.archers, function (err, archer){
-		res.redirect('archers');
+app.post('/books', function (req, res){
+	db.Book.create(req.body.books, function (err, book){
+		res.redirect('/books');
 	});
 });
 //SHOW
-app.get('/archers/:id/show', function (req, res){
-	db.Archer.findById(req.params.id, function (err, archer){
-		res.render("archers/show", {archer:archer});	
+app.get('/books/:id/show', function (req, res){
+	db.Book.findById(req.params.id, function (err, book){
+		res.render("books/show", {book:book});	
 	});
 });
 //EDIT
-app.get('/archers/:id/edit', function (req, res){
-	db.Archer.findById(req.params.id, function (err, archer){
-		res.render("archers/edit", {archer:archer});	
+app.get('/books/:id/edit', function (req, res){
+	db.Book.findById(req.params.id, function (err, book){
+		res.render("books/edit", {book:book});	
 	});
 });
 //UPDATE
-app.put('/archers/:id', function (req, res){
-	db.Archer.findByIdAndUpdate(req.params.id, req.body.archers, function (err, archer){
-		res.redirect('/archers');
+app.put('/books/:id', function (req, res){
+	db.Book.findByIdAndUpdate(req.params.id, req.body.books, function (err, book){
+		res.redirect('/books');
 	});
 });
 //DESTROY
-app.delete('/archers/:id', function (req, res){
-	db.Archer.findByIdAndRemove(req.params.id, function (err, archer){
-		res.redirect('/archers');
+app.delete('/books/:id', function (req, res){
+	db.Book.findByIdAndRemove(req.params.id, function (err, book){
+		res.redirect('/books');
 	});
 });
 //CATCH-ALL ERROR
 app.get('*', function (req, res){
-	res.render('archers/404');
+	res.render('books/404');
 });
 
 
