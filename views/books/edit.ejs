@@ -1,0 +1,14 @@
+<% include ../partials/header%>
+
+<form action="/books/<%= book.id %>?_method=PUT" method="POST">
+	<div>
+	Name:<input type="text" name="books[name]" value="<%= book.name %>">
+	</div>
+	<div>CodeName:<input type="text" name="books[codeName]" value="<%=book.codeName%>"></div>
+	<div>Picture:<input type="text" name="books[picture]" value="<%=book.picture%>"></div>
+	<div>Alive T/F:<input type="text" name="books[aliveYN]" value="<%=book.aliveYN%>"></div>
+	<div>Other Facts (in array):<input type="text" name="books[mixedBag]" value="<%=book.mixedBag%>"></div>
+	<div><input type="submit"></div>
+</form>
+
+<% include ../partials/footer %>
